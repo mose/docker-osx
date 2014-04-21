@@ -23,6 +23,7 @@ set -e
 export VAGRANT_CWD="$HOME/.docker-osx"
 
 DOCKER_IP="172.16.42.43"
+DOCKER_BRIDGE_IP="172.16.42.1"
 DOCKER_DOMAIN="localdocker"
 DOCKER_PORT="4243"
 
@@ -77,7 +78,7 @@ function help() {
   echo "  destroy   Destroy local docker virtual machine"
   echo "  clear     Remove all docker images and (running) containers"
   echo "  vagrant   Issue subcommands directly to the vagrant CLI"
-  echo "  ssh       Open SSH console on vagrant box"  
+  echo "  ssh       Open SSH console on vagrant box"
   echo "  env       Outputs environment variables for Docker to connect remotely"
   echo "  shell     Open a shell with Docker VM started and environment set"
   echo ""
@@ -152,7 +153,7 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.vm.network "private_network", :ip => "$DOCKER_IP"
   config.vm.provision :shell, :inline => "$INSTALL_UPDATE_DOCKER"
-  config.vm.provision :shell, :inline => "echo 'export DOCKER_OPTS=\"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:$DOCKER_PORT\"' >> /etc/default/docker"
+  config.vm.provision :shell, :inline => "echo 'export DOCKER_OPTS=\"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:$DOCKER_PORT --dns $DOCKER_BRIDGE_IP\"' >> /etc/default/docker"
   config.vm.synced_folder "$(echo ~)", "$(echo ~)", :create => true
 
   config.vm.provider :virtualbox do |vb|
@@ -202,7 +203,7 @@ case "$1" in
     #echo "(Alternatively, pass -H=$DOCKER_HOST on the command line.)"
     echo
     echo "Then, just use the docker command from OS X directly."
-    echo 
+    echo
     exit 0
     ;;
   destroy)
