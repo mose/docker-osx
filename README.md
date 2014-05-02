@@ -6,10 +6,10 @@ docker-osx
 
 This an unofficial docker helper made to simplify docker usage on OSX.
 
-
 You can also read the official OSX documentation on Docker website: http://docs.docker.io/installation/mac/
 
 It was forked and modified to include default container DNS, in order to use it with skydock https://github.com/crosbymichael/skydock
+
 
 # What is docker-osx
 
